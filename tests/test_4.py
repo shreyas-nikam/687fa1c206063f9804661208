@@ -1,24 +1,18 @@
 import pytest
-from definition_36f69cb1a4b94a4f8d225077e2c46e3e import estimate_capital_relief
+from definition_202d7066256f4298b043c1d8778c29c2 import plot_payout_function
 
-@pytest.mark.parametrize("UL_gross, UL_net, PD_A, L_insured, expected_EL_default, expected_UL_default, expected_final_relief", [
-    (100, 50, 0.01, 1000, 10, 29.7, 10.3),
-    (50, 25, 0.005, 500, 2.5, 7.425, 15.075),
-    (1000, 500, 0.001, 10000, 10, 29.97, 460.03),
-    (10, 5, 0.1, 100, 10, 27, -22),
-    (100, 100, 0.01, 1000, 10, 29.7, -39.7)
+@pytest.mark.parametrize("deductible, cover", [
+    (1000, 5000),
+    (0, 1000),
+    (2000, 2000),
+    (500, 0),
+    (-100, 500), #Deductible can't be negative
 ])
-
-def test_estimate_capital_relief(UL_gross, UL_net, PD_A, L_insured, expected_EL_default, expected_UL_default, expected_final_relief):
-    EL_default = PD_A * L_insured
-    UL_default = 3 * PD_A * (1 - PD_A) * L_insured
-    nominal_relief = UL_gross - UL_net
-    final_relief = nominal_relief - (EL_default + UL_default)
-
-    assert EL_default == pytest.approx(expected_EL_default)
-    assert UL_default == pytest.approx(expected_UL_default)
-    assert final_relief == pytest.approx(expected_final_relief)
-
-    # The function itself is not implemented, so we can't directly test its return value.
-    # This test mainly verifies the calculations based on the provided formulas.
-    # To fully test the function, the implementation needs to be provided.
+def test_plot_payout_function(deductible, cover):
+    # This test case primarily checks if the function runs without errors.
+    # Ideally, we'd assert properties of the plot itself, but that's difficult
+    # without inspecting the underlying plotting library's data structures.
+    try:
+        plot_payout_function(deductible, cover)
+    except Exception as e:
+        pytest.fail(f"plot_payout_function raised an exception: {e}")
