@@ -2,7 +2,7 @@ import streamlit as st
 st.set_page_config(page_title="QuLab", layout="wide")
 st.sidebar.image("https://www.quantuniversity.com/assets/img/logo5.jpg")
 st.sidebar.divider()
-st.title("QuLab")
+st.title("QuLab: Crypto Operational Loss Mitigation Simulator")
 st.divider()
 st.markdown("""
 In this lab, we will explore the Crypto Operational Loss Mitigation Simulator.

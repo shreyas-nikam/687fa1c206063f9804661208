@@ -158,13 +158,12 @@ def plot_aggregated_comparison(aggregated_data):
 
 
 def run_page1():
-    st.header("Crypto Operational Loss Mitigation Simulator")
     st.markdown("""
     This interactive simulator allows you to model operational loss events within a hypothetical cryptocurrency exchange and analyze the impact of different insurance-like mitigation strategies.
     """)
     
     # Add explanation section at the top
-    with st.expander("📚 Concepts and Formulae Explanation", expanded=False):
+    with st.expander("Concepts and Formulae Explanation", expanded=False):
         st.markdown(r"""
         ### Loss Severity Distributions
         The simulator uses different statistical distributions to model the severity of operational loss events:
