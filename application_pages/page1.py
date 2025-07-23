@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -162,8 +161,36 @@ def run_page1():
     st.header("Crypto Operational Loss Mitigation Simulator")
     st.markdown("""
     This interactive simulator allows you to model operational loss events within a hypothetical cryptocurrency exchange and analyze the impact of different insurance-like mitigation strategies.
-    Adjust the parameters in the sidebar to see real-time updates in the simulation results and visualizations.
     """)
+    
+    # Add explanation section at the top
+    with st.expander("📚 Concepts and Formulae Explanation", expanded=False):
+        st.markdown(r"""
+        ### Loss Severity Distributions
+        The simulator uses different statistical distributions to model the severity of operational loss events:
+
+        *   **Lognormal Distribution**: Often used to model phenomena that are positively skewed, such as insurance losses.
+            *   **Formula**: $$ f(x | \mu, \sigma) = \frac{1}{x\sigma\sqrt{2\pi}} e^{-\frac{(\ln x - \mu)^2}{2\sigma^2}} $$
+            *   **Parameters**: `mu` (μ): Mean of the logarithm; `sigma` (σ): Standard deviation of the logarithm
+
+        *   **Pareto Distribution**: Characterized by a heavy tail, often used to model extreme events.
+            *   **Formula**: $$ f(x | x_m, \alpha) = \frac{\alpha x_m^\alpha}{x^{\alpha+1}} \quad \text{for } x \ge x_m $$
+            *   **Parameters**: `xm` ($x_m$): Minimum possible value; `alpha` (α): Shape parameter
+
+        *   **Exponential Distribution**: Often used to model the time until an event occurs.
+            *   **Formula**: $$ f(x | \lambda) = \lambda e^{-\lambda x} \quad \text{for } x \ge 0 $$
+            *   **Parameter**: `lambda` (λ): Rate parameter
+
+        ### Mitigation Policy
+        The simulator uses a mitigation policy with:
+        *   **Deductible (d)**: Amount of loss the insured must bear before the policy pays out
+        *   **Cover (c)**: Maximum amount the policy will pay out per loss event
+
+        **Payout Function**: $$ L_{d,c}(X_i) = \min(\max(X_i - d, 0), c) $$
+        **Retained Loss**: $$ \text{Retained Loss} = \text{Gross Loss} - \text{Payout} $$
+        **Aggregate Net Risk**: $$ S_{net} = \sum_{i=1}^{N} (X_i - L_{d,c}(X_i)) $$
+        """)
+    
     st.divider()
 
     # --- Sidebar for Controls ---
@@ -180,16 +207,16 @@ def run_page1():
         st.sidebar.subheader("Lognormal Distribution Parameters")
         distribution_params['mu'] = st.sidebar.number_input("Mean of Log (μ)", value=8.0, min_value=0.1, max_value=20.0, step=0.1)
         distribution_params['sigma'] = st.sidebar.number_input("Std Dev of Log (σ)", value=1.0, min_value=0.1, max_value=5.0, step=0.1)
-        st.sidebar.markdown(r"Probability Density Function: $$ f(x | \mu, \sigma) = rac{1}{x\sigma\sqrt{2\pi}} e^{-rac{(\ln x - \mu)^2}{2\sigma^2}} $$")
+        st.sidebar.info("Used for modeling positively skewed phenomena like insurance losses")
     elif distribution_type == 'Pareto':
         st.sidebar.subheader("Pareto Distribution Parameters")
         distribution_params['xm'] = st.sidebar.number_input("Minimum Value (xm)", value=10000.0, min_value=100.0, max_value=1000000.0, step=1000.0)
         distribution_params['alpha'] = st.sidebar.number_input("Shape Parameter (α)", value=2.0, min_value=0.1, max_value=10.0, step=0.1)
-        st.sidebar.markdown(r"Probability Density Function: $$ f(x | x_m, lpha) = rac{lpha x_m^lpha}{x^{lpha+1}} \quad 	ext{for } x \ge x_m $$")
+        st.sidebar.info("Heavy-tailed distribution for modeling extreme events")
     elif distribution_type == 'Exponential':
         st.sidebar.subheader("Exponential Distribution Parameters")
         distribution_params['lambda_'] = st.sidebar.number_input("Rate Parameter (λ)", value=0.0001, format="%.5f", min_value=0.00001, max_value=0.1, step=0.00001)
-        st.sidebar.markdown(r"Probability Density Function: $$ f(x | \lambda) = \lambda e^{-\lambda x} \quad 	ext{for } x \ge 0 $$")
+        st.sidebar.info("Models time between events or event frequencies")
 
     st.sidebar.divider()
     st.sidebar.header("Mitigation Policy Parameters")
@@ -264,11 +291,11 @@ def run_page1():
         st.markdown("A summary of the total financial impact:")
         col1, col2, col3 = st.columns(3)
         with col1:
-            st.metric(label="Total Gross Loss", value=f"\${aggregated_loss_data['gross_loss']:,.2f}")
+            st.metric(label="Total Gross Loss", value=f"${aggregated_loss_data['gross_loss']:,.2f}")
         with col2:
-            st.metric(label="Total Transferred Loss (Payout)", value=f"\${aggregated_loss_data['transferred_loss']:,.2f}")
+            st.metric(label="Total Transferred Loss (Payout)", value=f"${aggregated_loss_data['transferred_loss']:,.2f}")
         with col3:
-            st.metric(label="Total Retained Loss", value=f"\${aggregated_loss_data['retained_loss']:,.2f}")
+            st.metric(label="Total Retained Loss", value=f"${aggregated_loss_data['retained_loss']:,.2f}")
 
     except ValueError as e:
         st.error(f"Configuration Error: {e}")
