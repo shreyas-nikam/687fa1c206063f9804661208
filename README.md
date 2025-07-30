@@ -168,18 +168,6 @@ This project is licensed under the MIT License - see the `LICENSE` file for deta
 
 ---
 
-## 9. Contact
-
-For questions, feedback, or collaborations, please feel free to reach out:
-
-*   **[Your Name]** - [Your Email Address]
-*   **[Another Contributor's Name (if any)]** - [Their Email Address]
-
-Project Link: [https://github.com/your-username/qu-lab-crypto-loss-simulator](https://github.com/your-username/qu-lab-crypto-loss-simulator)
-*(Replace with your actual GitHub repository link)*
-
----
-
 
 ## License
 
